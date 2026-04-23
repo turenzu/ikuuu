@@ -1,0 +1,53 @@
+name: Ikuuu Auto Checkin
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '16 16 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  checkin_job:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      # 📥 拉私有仓库
+      - name: Checkout private repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/ikuuu-auto
+          token: ${{ secrets.PRIVATE_REPO_TOKEN }}
+          path: scripts
+
+      # 🐍 Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 🌐 Chrome + xvfb
+      - name: Install Chrome & deps
+        run: |
+          sudo apt update
+          sudo apt install -y google-chrome-stable xvfb
+
+      # 📦 安装 Python 依赖
+      - name: Install dependencies
+        working-directory: scripts
+        run: |
+          pip install --upgrade pip
+          pip install seleniumbase requests beautifulsoup4 cloudscraper
+
+      # 🚀 运行脚本
+      - name: Run script
+        working-directory: scripts
+        env:
+          IKUUU_EMAIL: ${{ secrets.IKUUU_EMAIL }}
+          IKUUU_PASSWORD: ${{ secrets.IKUUU_PASSWORD }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          xvfb-run -a python ikuuu.py
