@@ -3,7 +3,7 @@ name: Ikuuu Auto Checkin
 on:
   workflow_dispatch:
   schedule:
-    - cron: '16 16 * * *'
+    - cron: '17 00 * * *'
 
 permissions:
   contents: write
