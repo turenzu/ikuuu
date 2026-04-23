@@ -1,4 +1,4 @@
-name: Ikuuu Auto Checkin
+name: iKuuu自动签到
 
 on:
   workflow_dispatch:
