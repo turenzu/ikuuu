@@ -3,7 +3,7 @@ name: iKuuu自动签到
 on:
   workflow_dispatch:
   schedule:
-    - cron: '17 11 * * *'
+    - cron: '17 09 * * *'
 
 permissions:
   contents: write
